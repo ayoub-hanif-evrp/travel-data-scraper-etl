@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Travel Data Pipeline — Data Delivery Dashboard</title>
+  <meta name="description" content="Client-facing data delivery dashboard for a Scrapy travel-data scraping and ETL pipeline demonstration.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-block">
+        <p class="eyebrow">Data Delivery Dashboard</p>
+        <h1>Travel Data Pipeline</h1>
+        <p class="subtitle">Scraping, validation, quality control, and structured data delivery demo</p>
+        <p class="source-note">Source demo: English Wikivoyage</p>
+      </div>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="#overview">Overview</a>
+        <a href="#explorer">Dataset Explorer</a>
+        <a href="#map">Geographic Coverage</a>
+        <a href="#quality">Data Quality</a>
+        <a href="#pipeline">Pipeline</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="overview" class="section">
+      <div class="section-inner">
+        <h2>Overview</h2>
+        <p class="lead">
+          An end-to-end scraping and ETL demonstration that extracts travel listings from multiple
+          international destination pages, validates and deduplicates the data, and delivers
+          analysis-ready structured outputs.
+        </p>
+        <p class="muted" id="run-meta">Loading run metadata…</p>
+
+        <div class="kpi-grid" id="overview-kpis" aria-live="polite"></div>
+
+        <div class="meta-grid" id="overview-meta"></div>
+      </div>
+    </section>
+
+    <section id="explorer" class="section section-alt">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <h2>Dataset Explorer</h2>
+            <p class="muted">Browse the processed demonstration dataset delivered by the pipeline.</p>
+          </div>
+          <p class="result-count" id="result-count" aria-live="polite">0 records</p>
+        </div>
+
+        <form class="filters" id="filter-form" autocomplete="off">
+          <div class="field">
+            <label for="search">Search</label>
+            <input id="search" name="search" type="search" placeholder="Name, address, description…">
+          </div>
+          <div class="field">
+            <label for="filter-country">Country</label>
+            <select id="filter-country" name="country" multiple size="4" aria-label="Filter by country"></select>
+          </div>
+          <div class="field">
+            <label for="filter-destination">Destination</label>
+            <select id="filter-destination" name="destination" multiple size="4" aria-label="Filter by destination"></select>
+          </div>
+          <div class="field">
+            <label for="filter-category">Category</label>
+            <select id="filter-category" name="category" multiple size="4" aria-label="Filter by category"></select>
+          </div>
+          <div class="filter-actions">
+            <button type="button" class="btn btn-ghost" id="reset-filters">Reset filters</button>
+            <button type="button" class="btn btn-primary" id="download-csv">Download filtered CSV</button>
+          </div>
+        </form>
+
+        <div class="table-wrap" role="region" aria-label="Listings table" tabindex="0">
+          <table class="data-table" id="listings-table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Destination</th>
+                <th scope="col">Country</th>
+                <th scope="col">Category</th>
+                <th scope="col">Address</th>
+                <th scope="col">Price</th>
+                <th scope="col">Website</th>
+              </tr>
+            </thead>
+            <tbody id="listings-body">
+              <tr><td colspan="7">Loading listings…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="map" class="section">
+      <div class="section-inner">
+        <h2>Geographic Coverage</h2>
+        <p class="muted">Markers show listings with valid coordinates from the demonstration crawl.</p>
+        <div id="coverage-map" class="map-frame" role="img" aria-label="Map of geocoded travel listings"></div>
+        <p class="map-note muted" id="map-note"></p>
+      </div>
+    </section>
+
+    <section id="quality" class="section section-alt">
+      <div class="section-inner">
+        <h2>Data Quality</h2>
+        <p class="muted">Pipeline counts and field completeness from the last ETL quality report.</p>
+
+        <div class="kpi-grid" id="quality-kpis"></div>
+
+        <div class="quality-layout">
+          <article class="panel">
+            <h3>Field completeness</h3>
+            <div id="completeness-bars"></div>
+          </article>
+          <article class="panel">
+            <h3>Records by country</h3>
+            <ul class="stat-list" id="by-country"></ul>
+          </article>
+          <article class="panel">
+            <h3>Records by destination</h3>
+            <ul class="stat-list" id="by-destination"></ul>
+          </article>
+          <article class="panel">
+            <h3>Records by category</h3>
+            <ul class="stat-list" id="by-category"></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="pipeline" class="section">
+      <div class="section-inner">
+        <h2>Pipeline</h2>
+        <p class="muted">How the demonstration transforms source pages into delivery-ready outputs.</p>
+
+        <ol class="pipeline-steps">
+          <li>
+            <strong>Source HTML</strong>
+            <span>Configured English Wikivoyage destination pages only.</span>
+          </li>
+          <li>
+            <strong>Scrapy Extraction</strong>
+            <span>Structured listing fields extracted from semantic markup.</span>
+          </li>
+          <li>
+            <strong>Raw JSONL</strong>
+            <span>Source values preserved before destructive transforms.</span>
+          </li>
+          <li>
+            <strong>Cleaning</strong>
+            <span>Whitespace, URLs, phones, and coordinates normalized carefully.</span>
+          </li>
+          <li>
+            <strong>Validation</strong>
+            <span>Required fields and ranges checked; rejects retained with reasons.</span>
+          </li>
+          <li>
+            <strong>Deduplication</strong>
+            <span>Deterministic identity keys; first occurrence kept.</span>
+          </li>
+          <li>
+            <strong>CSV / JSONL / SQLite</strong>
+            <span>Analysis-ready structured exports with indexed SQLite storage.</span>
+          </li>
+          <li>
+            <strong>Quality Report</strong>
+            <span>Run metrics, completeness, and rejection summaries.</span>
+          </li>
+          <li>
+            <strong>Data Delivery Dashboard</strong>
+            <span>Static HTML/CSS/JavaScript view of the delivered dataset.</span>
+          </li>
+        </ol>
+
+        <aside class="callout">
+          <h3>Responsible crawling</h3>
+          <ul>
+            <li><code>robots.txt</code> is obeyed</li>
+            <li>Low concurrency and download delay with AutoThrottle</li>
+            <li>Only configured destination pages are requested</li>
+            <li>This browser dashboard never launches scraping</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="section-inner footer-inner">
+      <p>Travel Data Scraping &amp; ETL Pipeline — demonstration outputs only.</p>
+      <p class="muted">Derived travel facts retain Wikivoyage provenance via <code>source_url</code>. See DATA_LICENSE.md.</p>
+    </div>
+  </footer>
+
+  <dialog id="detail-dialog" aria-labelledby="detail-title">
+    <form method="dialog" class="dialog-bar">
+      <h2 id="detail-title">Listing details</h2>
+      <button type="submit" class="btn btn-ghost" value="close" aria-label="Close details">Close</button>
+    </form>
+    <div id="detail-body" class="detail-body"></div>
+  </dialog>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZswnYpxelvnq9diQxVcOrOXHJo=" crossorigin=""></script>
+  <script src="assets/app.js" defer></script>
+</body>
+</html>

@@ -13,6 +13,7 @@ from scrapy import signals
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from travel_scraper import DEFAULT_DESTINATION_NAMES, PROJECT_ROOT
+from travel_scraper.dashboard_export import build_dashboard_data
 from travel_scraper.etl import run_etl
 from travel_scraper.spiders.wikivoyage import WikivoyageSpider
 
@@ -25,7 +26,7 @@ logger = logging.getLogger("run_demo")
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run the Travel Data Explorer scrape + ETL demo.",
+        description="Run the Travel Data Scraping & ETL Pipeline demo.",
     )
     parser.add_argument(
         "--destinations",
@@ -155,8 +156,15 @@ def main(argv: list[str] | None = None) -> int:
         sample_size=args.sample_size,
     )
 
+    try:
+        dash_paths = build_dashboard_data()
+        logger.info("Dashboard data written: %s", dash_paths["listings"])
+    except (OSError, ValueError, FileNotFoundError) as exc:
+        logger.warning("Could not refresh dashboard data: %s", exc)
+        dash_paths = None
+
     print()
-    print("=== Travel Data Explorer demo complete ===")
+    print("=== Travel Data Pipeline demo complete ===")
     print(f"Destinations:     {', '.join(destinations)}")
     print(f"Pages OK / fail:  {crawl_stats['pages_ok']} / {crawl_stats['pages_failed']}")
     print(f"Raw records:      {result['raw_count']}")
@@ -168,8 +176,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"JSONL:            {result['outputs']['jsonl']}")
     print(f"SQLite:           {result['outputs']['sqlite']}")
     print(f"Quality report:   {result['outputs']['quality_md']}")
+    if dash_paths:
+        print(f"Dashboard data:   {dash_paths['listings']}")
     print()
-    print("Launch the explorer with:  python -m app.main")
+    print("View the dashboard with:  python -m http.server 8080 -d docs")
     logger.info("Demo complete")
     return 0
 

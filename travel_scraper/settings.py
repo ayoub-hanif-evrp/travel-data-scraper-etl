@@ -15,8 +15,8 @@ SPIDER_MODULES = ["travel_scraper.spiders"]
 NEWSPIDER_MODULE = "travel_scraper.spiders"
 
 _DEFAULT_UA = (
-    "TravelDataPortfolio/1.0 "
-    "(+https://github.com/YOUR_USERNAME/travel-data-scraper-etl)"
+    "TravelDataPipeline/1.0 "
+    "(+https://github.com/ayoub-hanif-evrp/travel-data-scraper-etl)"
 )
 USER_AGENT = os.getenv("SCRAPER_USER_AGENT", _DEFAULT_UA)
 

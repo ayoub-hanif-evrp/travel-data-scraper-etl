@@ -2,7 +2,7 @@
 
 This repository contains two different kinds of material:
 
-1. **Original project source code** (Scrapy spider, ETL modules, NiceGUI app, tests, documentation text written for this project) — licensed under the MIT License in `LICENSE`.
+1. **Original project source code** (Scrapy spider, ETL modules, static Data Delivery Dashboard, tests, documentation text written for this project) — licensed under the MIT License in `LICENSE`.
 2. **Sample and processed travel listing data** derived from English Wikivoyage pages — not covered solely by the MIT License.
 
 ## Source attribution
