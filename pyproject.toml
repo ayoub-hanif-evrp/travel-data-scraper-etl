@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "travel-data-scraper-etl"
 version = "1.0.0"
-description = "End-to-end Python travel data scraping and ETL pipeline with structured exports and a static data delivery dashboard"
+description = "Reusable Python travel-data scraper and ETL with a map-based Atlas explorer demo"
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
@@ -15,6 +15,9 @@ dependencies = [
     "pandas>=2.2",
     "python-dotenv>=1.0",
     "itemadapter>=0.8",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "httpx>=0.27",
 ]
 
 [project.optional-dependencies]
@@ -24,7 +27,7 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["travel_scraper*"]
+include = ["travel_scraper*", "server*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -36,7 +39,7 @@ addopts = "-m 'not integration'"
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-src = ["travel_scraper", "scripts", "tests"]
+src = ["travel_scraper", "server", "scripts", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]

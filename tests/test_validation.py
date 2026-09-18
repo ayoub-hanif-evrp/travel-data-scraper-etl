@@ -26,6 +26,11 @@ def test_missing_name() -> None:
     assert "missing_name" in validate_record(_base(name=None))
 
 
+def test_invalid_placeholder_name() -> None:
+    reasons = validate_record(_base(name="["))
+    assert "invalid_name" in reasons
+
+
 def test_invalid_coordinates() -> None:
     reasons = validate_record(_base(latitude=120.0))
     assert "invalid_latitude" in reasons

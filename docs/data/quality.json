@@ -1,98 +1,116 @@
 {
-  "run_timestamp": "2026-09-18T13:31:57+00:00",
+  "run_timestamp": "2026-09-18T15:38:44+00:00",
   "configured_destinations": [
     "Marrakech",
     "Paris",
-    "Barcelona",
     "Rome",
     "Istanbul",
-    "Bangkok"
+    "Bangkok",
+    "Tokyo",
+    "New York City",
+    "Mexico City",
+    "Buenos Aires",
+    "Cape Town",
+    "Sydney"
   ],
-  "pages_requested": 6,
-  "pages_successfully_processed": 6,
+  "pages_requested": 11,
+  "pages_successfully_processed": 11,
   "failed_pages": 0,
-  "raw_records": 316,
-  "valid_records": 316,
-  "invalid_records": 0,
-  "duplicates_detected": 1,
-  "duplicates_removed": 1,
-  "final_records": 315,
+  "raw_records": 636,
+  "valid_records": 626,
+  "invalid_records": 10,
+  "duplicates_detected": 2,
+  "duplicates_removed": 2,
+  "final_records": 624,
   "records_by_destination": {
-    "Marrakech": 133,
+    "Cape Town": 184,
+    "Marrakech": 132,
+    "Mexico City": 86,
     "Bangkok": 77,
     "Paris": 60,
-    "Barcelona": 28,
-    "Rome": 11,
+    "Sydney": 25,
+    "Buenos Aires": 17,
+    "New York City": 14,
+    "Tokyo": 13,
+    "Rome": 10,
     "Istanbul": 6
   },
   "records_by_country": {
-    "Morocco": 133,
+    "South Africa": 184,
+    "Morocco": 132,
+    "Mexico": 86,
     "Thailand": 77,
     "France": 60,
-    "Spain": 28,
-    "Italy": 11,
+    "Australia": 25,
+    "Argentina": 17,
+    "United States": 14,
+    "Japan": 13,
+    "Italy": 10,
     "Turkey": 6
   },
   "records_by_category": {
-    "see": 146,
-    "do": 64,
-    "sleep": 52,
-    "eat": 34,
-    "drink": 11,
-    "buy": 8
+    "see": 221,
+    "do": 180,
+    "sleep": 95,
+    "eat": 58,
+    "buy": 50,
+    "drink": 20
   },
   "field_completeness": {
     "address": {
-      "present": 201,
-      "missing": 114,
-      "completeness_pct": 63.81
+      "present": 386,
+      "missing": 238,
+      "completeness_pct": 61.86
     },
     "phone": {
-      "present": 192,
-      "missing": 123,
-      "completeness_pct": 60.95
+      "present": 364,
+      "missing": 260,
+      "completeness_pct": 58.33
     },
     "email": {
-      "present": 117,
-      "missing": 198,
-      "completeness_pct": 37.14
+      "present": 230,
+      "missing": 394,
+      "completeness_pct": 36.86
     },
     "website": {
-      "present": 209,
-      "missing": 106,
-      "completeness_pct": 66.35
+      "present": 388,
+      "missing": 236,
+      "completeness_pct": 62.18
     },
     "opening_hours": {
-      "present": 65,
-      "missing": 250,
-      "completeness_pct": 20.63
+      "present": 123,
+      "missing": 501,
+      "completeness_pct": 19.71
     },
     "price": {
-      "present": 74,
-      "missing": 241,
-      "completeness_pct": 23.49
+      "present": 151,
+      "missing": 473,
+      "completeness_pct": 24.2
     },
     "coordinates": {
-      "present": 244,
-      "missing": 71,
-      "completeness_pct": 77.46
+      "present": 409,
+      "missing": 215,
+      "completeness_pct": 65.54
     }
   },
   "coordinate_validity": {
-    "with_valid_coordinates": 244,
-    "without_coordinates": 71
+    "with_valid_coordinates": 409,
+    "without_coordinates": 215
   },
   "url_validity": {
-    "with_website": 209,
-    "without_website": 106
+    "with_website": 388,
+    "without_website": 236
   },
-  "rejection_reasons": {},
+  "rejection_reasons": {
+    "invalid_name": 10
+  },
   "generated_outputs": {
     "csv": "data/processed/travel_listings.csv",
     "jsonl": "data/processed/travel_listings.jsonl",
     "sqlite": "data/processed/travel_listings.sqlite",
     "sample_csv": "data/sample/travel_listings_sample.csv",
     "sample_jsonl": "data/sample/travel_listings_sample.jsonl",
+    "rejected": "data/processed/rejected_records.jsonl",
     "quality_md": "reports/data_quality_report.md",
     "quality_json": "reports/data_quality_report.json"
   },

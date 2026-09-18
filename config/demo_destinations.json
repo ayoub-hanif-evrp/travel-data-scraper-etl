@@ -1,0 +1,13 @@
+[
+  {"name": "Marrakech", "country": "Morocco"},
+  {"name": "Paris", "country": "France"},
+  {"name": "Rome", "country": "Italy"},
+  {"name": "Istanbul", "country": "Turkey"},
+  {"name": "Bangkok", "country": "Thailand"},
+  {"name": "Tokyo", "country": "Japan"},
+  {"name": "New York City", "country": "United States"},
+  {"name": "Mexico City", "country": "Mexico"},
+  {"name": "Buenos Aires", "country": "Argentina"},
+  {"name": "Cape Town", "country": "South Africa"},
+  {"name": "Sydney", "country": "Australia"}
+]

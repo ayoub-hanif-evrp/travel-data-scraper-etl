@@ -35,8 +35,13 @@ def validate_record(record: dict[str, Any]) -> list[str]:
     """Return a list of rejection reasons (empty if valid)."""
     reasons: list[str] = []
 
-    if not record.get("name"):
+    name = record.get("name")
+    if not name:
         reasons.append("missing_name")
+    elif isinstance(name, str):
+        stripped = name.strip()
+        if len(stripped) < 2 or stripped in {"[", "]", "(", ")", "{", "}", "-", "—", "–"} or not any(ch.isalnum() for ch in stripped):
+            reasons.append("invalid_name")
     if not record.get("destination"):
         reasons.append("missing_destination")
 
