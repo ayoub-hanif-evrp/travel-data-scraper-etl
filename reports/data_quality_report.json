@@ -1,0 +1,90 @@
+{
+  "run_timestamp": "2026-09-18T13:06:06+00:00",
+  "configured_destinations": [
+    "Marrakech",
+    "Fes",
+    "Essaouira",
+    "Chefchaouen",
+    "Rabat"
+  ],
+  "pages_requested": 5,
+  "pages_successfully_processed": 5,
+  "failed_pages": 0,
+  "raw_records": 349,
+  "valid_records": 349,
+  "invalid_records": 0,
+  "duplicates_detected": 1,
+  "duplicates_removed": 1,
+  "final_records": 348,
+  "records_by_destination": {
+    "Marrakech": 133,
+    "Fes": 66,
+    "Rabat": 57,
+    "Chefchaouen": 48,
+    "Essaouira": 44
+  },
+  "records_by_category": {
+    "sleep": 126,
+    "see": 72,
+    "eat": 71,
+    "do": 44,
+    "drink": 27,
+    "buy": 8
+  },
+  "field_completeness": {
+    "address": {
+      "present": 206,
+      "missing": 142,
+      "completeness_pct": 59.2
+    },
+    "phone": {
+      "present": 157,
+      "missing": 191,
+      "completeness_pct": 45.11
+    },
+    "email": {
+      "present": 76,
+      "missing": 272,
+      "completeness_pct": 21.84
+    },
+    "website": {
+      "present": 151,
+      "missing": 197,
+      "completeness_pct": 43.39
+    },
+    "opening_hours": {
+      "present": 58,
+      "missing": 290,
+      "completeness_pct": 16.67
+    },
+    "price": {
+      "present": 159,
+      "missing": 189,
+      "completeness_pct": 45.69
+    },
+    "coordinates": {
+      "present": 256,
+      "missing": 92,
+      "completeness_pct": 73.56
+    }
+  },
+  "coordinate_validity": {
+    "with_valid_coordinates": 256,
+    "without_coordinates": 92
+  },
+  "url_validity": {
+    "with_website": 151,
+    "without_website": 197
+  },
+  "rejection_reasons": {},
+  "generated_outputs": {
+    "csv": "data/processed/travel_listings.csv",
+    "jsonl": "data/processed/travel_listings.jsonl",
+    "sqlite": "data/processed/travel_listings.sqlite",
+    "sample_csv": "data/sample/travel_listings_sample.csv",
+    "sample_jsonl": "data/sample/travel_listings_sample.jsonl",
+    "quality_md": "reports/data_quality_report.md",
+    "quality_json": "reports/data_quality_report.json"
+  },
+  "warnings": []
+}

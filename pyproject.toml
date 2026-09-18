@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-data-scraper-etl"
+version = "1.0.0"
+description = "End-to-end Python web scraping and ETL pipeline for structured travel data"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Travel Data Portfolio" }]
+dependencies = [
+    "scrapy>=2.11",
+    "pandas>=2.2",
+    "nicegui>=2.0",
+    "python-dotenv>=1.0",
+    "itemadapter>=0.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[tool.setuptools.packages.find]
+include = ["travel_scraper*", "app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: live network tests (not run by default in CI)",
+]
+addopts = "-m 'not integration'"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["travel_scraper", "app", "scripts", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]

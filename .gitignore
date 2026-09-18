@@ -1,0 +1,45 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Testing / lint caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.tox/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE (generic)
+*.swp
+*.swo
+*~
+
+# Local crawl artifacts (keep sample/ and committed reports)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Logs
+*.log
+scrapy.log
