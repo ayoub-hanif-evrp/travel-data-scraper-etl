@@ -1,24 +1,8 @@
 # Travel Data Explorer
 
-An end-to-end Python web-scraping and ETL project that extracts structured travel listings, cleans and validates the data, removes duplicates, stores analysis-ready outputs, and provides an interactive web interface for exploring the results.
+An end-to-end Python web scraping and ETL pipeline that extracts structured travel listings across multiple international destinations, normalizes them into a common schema, validates and deduplicates the data, and provides CSV, JSONL, SQLite, quality-report and interactive NiceGUI outputs.
 
-**Application name:** Travel Data Explorer  
-**Repository:** `travel-data-scraper-etl`
-
-## Project Overview
-
-This demonstration crawls a small, fixed set of English [Wikivoyage](https://en.wikivoyage.org/) destination pages (Moroccan cities by default), extracts structured `see` / `do` / `buy` / `eat` / `drink` / `sleep` listings, runs an explicit ETL pipeline, and serves the results in a NiceGUI explorer.
-
-It is intentionally conservative: only configured destination pages are requested, robots.txt is obeyed, and the public UI never triggers a crawl.
-
-## What This Demonstrates
-
-- Respectful Scrapy crawling with throttling and informative User-Agent configuration
-- Field extraction from real listing markup (not page titles alone)
-- Normalization, validation with rejection tracking, and deterministic deduplication
-- SQLite / CSV / JSONL exports plus a data-quality report
-- A service-backed NiceGUI app for filtering, charts, maps, and CSV download
-- Offline unit tests and CI (Ruff + pytest)
+Default destinations are an intentionally small international sample — not a full-site crawl.
 
 ## Architecture
 
@@ -35,147 +19,72 @@ flowchart TD
   Report --> UI
 ```
 
-## Extracted Fields
+| Stage | Role |
+|-------|------|
+| Scrapy spider | Requests configured Wikivoyage destination pages only |
+| Raw JSONL | Preserves source field values before transforms |
+| Cleaning | Normalizes text, URLs, phones, coordinates |
+| Validation | Checks required fields and ranges; keeps reject reasons |
+| Deduplication | Deterministic identity keys; keeps first match |
+| Storage | Analysis-ready CSV, JSONL, and SQLite |
+| Quality report | Real run metrics (counts, completeness, rejects) |
+| NiceGUI | Interactive overview, listings, quality, and pipeline pages |
 
-| Field | Notes |
-|-------|--------|
-| `id` | Stable project hash of identity fields |
-| `destination`, `country` | Destination config |
-| `category`, `subcategory` | Listing type / nearest subsection |
-| `name`, `address`, `phone`, `email`, `website` | When present on the source |
-| `latitude`, `longitude` | Numeric when the source provides them |
-| `opening_hours`, `price`, `description` | Concise factual fields only |
-| `source_url`, `source_listing_id`, `scraped_at` | Provenance |
+## Default destinations
 
-Missing source values stay missing — nothing is fabricated.
+| Destination | Country |
+|-------------|---------|
+| Marrakech | Morocco |
+| Paris | France |
+| Barcelona | Spain |
+| Rome | Italy |
+| Istanbul | Turkey |
+| Bangkok | Thailand |
 
-## Project Structure
+Custom destinations can be passed on the CLI. Unknown cities leave `country` empty rather than inventing one.
 
-```text
-travel_scraper/     Scrapy spider, parsing, ETL, storage, quality
-app/                NiceGUI Travel Data Explorer
-scripts/run_demo.py End-to-end demo orchestration
-data/               raw / processed / sample outputs
-reports/            Data quality Markdown + JSON
-tests/              Offline unit tests + HTML fixtures
-```
+## Latest demo results
 
-## Quick Start
+From the current international crawl:
 
-Requires **Python 3.12+**.
+- Pages processed: **6 / 0 failed**
+- Raw records: **316**
+- Valid / invalid: **316 / 0**
+- Duplicates removed: **1**
+- Final records: **315**
 
-```bash
-python -m venv .venv
-```
+By destination: Marrakech 133, Bangkok 77, Paris 60, Barcelona 28, Rome 11, Istanbul 6  
+By country: Morocco 133, Thailand 77, France 60, Spain 28, Italy 11, Turkey 6
 
-Activate the virtual environment, then:
+## Project layout
 
-```bash
-pip install -e ".[dev]"
-```
+| Path | Role |
+|------|------|
+| `travel_scraper/` | Scrapy spider + parsing + ETL |
+| `app/` | NiceGUI Travel Data Explorer |
+| `scripts/run_demo.py` | Full demo orchestration |
+| `data/sample/` | Small repository sample |
+| `reports/` | Data quality Markdown + JSON |
+| `tests/` | Offline unit tests |
 
-Copy `.env.example` to `.env` and set `SCRAPER_USER_AGENT` to a contactable identifier before publishing (replace `YOUR_USERNAME`).
+## Extracted fields
 
-## Running the Scraper / ETL Demo
+`id`, `destination`, `country`, `category`, `subcategory`, `name`, `address`, `latitude`, `longitude`, `phone`, `email`, `website`, `opening_hours`, `price`, `description`, `source_url`, `source_listing_id`, `scraped_at`
 
-```bash
-python scripts/run_demo.py
-```
+Missing source values stay missing — nothing is invented.
 
-Optional flags:
+## Quick start
 
-```bash
-python scripts/run_demo.py --destinations Marrakech Fes Essaouira
-python scripts/run_demo.py --limit 50
-python scripts/run_demo.py --skip-crawl
-```
+Python 3.12+. Install with `pip install -e ".[dev]"`, then run `python scripts/run_demo.py` and `python -m app.main` (http://127.0.0.1:8080).
 
-`--skip-crawl` re-runs ETL against existing `data/raw/listings_raw.jsonl`.
+Optional: `--destinations Paris Lisbon Tokyo`, `--skip-crawl`. Set `SCRAPER_USER_AGENT` via `.env` (see `.env.example`).
 
-The demo:
+## Outputs
 
-1. Prepares output directories
-2. Runs a small Scrapy crawl (unless skipped)
-3. Cleans, validates, and deduplicates
-4. Writes CSV, JSONL, and SQLite
-5. Generates quality reports and a repository sample
-6. Prints a concise terminal summary
+Processed listings in `data/processed/` (CSV, JSONL, SQLite), a small sample in `data/sample/`, and quality reports in `reports/`.
 
-## Launching the Web App
+## Notes
 
-```bash
-python -m app.main
-```
-
-Open [http://127.0.0.1:8080](http://127.0.0.1:8080) (override with `APP_HOST` / `APP_PORT`).
-
-The app prefers `data/processed/travel_listings.sqlite`, falls back to `data/sample/travel_listings_sample.csv`, and shows an empty state if neither exists.
-
-## Interactive Data Explorer
-
-| Page | Purpose |
-|------|---------|
-| **Overview** | KPI cards, charts, Leaflet map, latest ETL summary |
-| **Listings** | Search, destination/category filters, AG Grid, details dialog, filtered CSV download |
-| **Data Quality** | Pipeline counts, field completeness, rejection reasons |
-| **Pipeline** | Architecture and responsible crawl settings (read-only) |
-
-There is no “Run Scraper” button in the UI.
-
-### Screenshots
-
-Capture these manually after launching the app (save under `docs/images/`):
-
-1. **Overview** — KPI row, charts, and map → `docs/images/overview.png`
-2. **Listings** — filters + table with a details dialog open → `docs/images/listings.png`
-3. **Data Quality** — completeness and rejection summary → `docs/images/data-quality.png`
-
-## Output Formats
-
-| Path | Description |
-|------|-------------|
-| `data/raw/listings_raw.jsonl` | Raw crawl values |
-| `data/processed/travel_listings.csv` | Clean unique listings |
-| `data/processed/travel_listings.jsonl` | Same as CSV, JSONL |
-| `data/processed/travel_listings.sqlite` | SQLite table `travel_listings` |
-| `data/sample/travel_listings_sample.*` | Smaller repo-friendly sample |
-| `reports/data_quality_report.md` | Human-readable quality report |
-| `reports/data_quality_report.json` | Machine-readable quality report |
-
-## Data Quality
-
-Validation does not silently drop rows: rejects go to `data/processed/rejected_records.jsonl` with reasons. Deduplication uses a deterministic key of destination + normalized name + coordinates (or address). See `travel_scraper/deduplication.py` for the full strategy.
-
-## Testing
-
-```bash
-pytest
-ruff check .
-```
-
-Parser tests use offline HTML fixtures. Live network tests are not part of the default suite.
-
-## Responsible Scraping
-
-- `ROBOTSTXT_OBEY = True`
-- Low concurrency and download delay; AutoThrottle enabled
-- Limited retries; configured destination pages only
-- No image/media downloads; no browser automation
-- Configurable User-Agent via `SCRAPER_USER_AGENT`
-
-## Data Source & Attribution
-
-Listings are derived from English Wikivoyage destination articles. Each record keeps a `source_url`. Project code is MIT-licensed (`LICENSE`); source-derived data follows Wikivoyage/Wikimedia terms — see `DATA_LICENSE.md`.
-
-## Limitations
-
-- Demonstration scope: a handful of destination pages, not a full-site crawl
-- Relies on current Wikivoyage HTML listing markup (`bdi.vcard` and related classes)
-- Optional fields are often sparse (phones, emails, websites vary by page)
-- Not a JavaScript-rendering, CAPTCHA, proxy, or distributed crawler
-- UI is desktop-oriented; no authentication or multi-user deployment features
-
-## License
-
-- Code: MIT — see `LICENSE`
-- Derived data: see `DATA_LICENSE.md`
+- Crawler obeys `robots.txt`; the UI does not trigger crawls.
+- Tests: `pytest` and `ruff check .`
+- Code: MIT (`LICENSE`). Derived data: `DATA_LICENSE.md`.

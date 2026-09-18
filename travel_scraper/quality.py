@@ -86,6 +86,7 @@ def build_quality_report(
         "duplicates_removed": duplicates_removed,
         "final_records": len(final_records),
         "records_by_destination": _count_by(final_records, "destination"),
+        "records_by_country": _count_by(final_records, "country"),
         "records_by_category": _count_by(final_records, "category"),
         "field_completeness": completeness,
         "coordinate_validity": {
@@ -141,6 +142,9 @@ def _render_markdown(report: dict[str, Any]) -> str:
         "",
     ]
     for key, value in report["records_by_destination"].items():
+        lines.append(f"- {key}: {value}")
+    lines.extend(["", "## Records by country", ""])
+    for key, value in (report.get("records_by_country") or {}).items():
         lines.append(f"- {key}: {value}")
     lines.extend(["", "## Records by category", ""])
     for key, value in report["records_by_category"].items():

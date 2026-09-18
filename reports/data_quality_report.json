@@ -1,80 +1,90 @@
 {
-  "run_timestamp": "2026-09-18T13:06:06+00:00",
+  "run_timestamp": "2026-09-18T13:31:57+00:00",
   "configured_destinations": [
     "Marrakech",
-    "Fes",
-    "Essaouira",
-    "Chefchaouen",
-    "Rabat"
+    "Paris",
+    "Barcelona",
+    "Rome",
+    "Istanbul",
+    "Bangkok"
   ],
-  "pages_requested": 5,
-  "pages_successfully_processed": 5,
+  "pages_requested": 6,
+  "pages_successfully_processed": 6,
   "failed_pages": 0,
-  "raw_records": 349,
-  "valid_records": 349,
+  "raw_records": 316,
+  "valid_records": 316,
   "invalid_records": 0,
   "duplicates_detected": 1,
   "duplicates_removed": 1,
-  "final_records": 348,
+  "final_records": 315,
   "records_by_destination": {
     "Marrakech": 133,
-    "Fes": 66,
-    "Rabat": 57,
-    "Chefchaouen": 48,
-    "Essaouira": 44
+    "Bangkok": 77,
+    "Paris": 60,
+    "Barcelona": 28,
+    "Rome": 11,
+    "Istanbul": 6
+  },
+  "records_by_country": {
+    "Morocco": 133,
+    "Thailand": 77,
+    "France": 60,
+    "Spain": 28,
+    "Italy": 11,
+    "Turkey": 6
   },
   "records_by_category": {
-    "sleep": 126,
-    "see": 72,
-    "eat": 71,
-    "do": 44,
-    "drink": 27,
+    "see": 146,
+    "do": 64,
+    "sleep": 52,
+    "eat": 34,
+    "drink": 11,
     "buy": 8
   },
   "field_completeness": {
     "address": {
-      "present": 206,
-      "missing": 142,
-      "completeness_pct": 59.2
+      "present": 201,
+      "missing": 114,
+      "completeness_pct": 63.81
     },
     "phone": {
-      "present": 157,
-      "missing": 191,
-      "completeness_pct": 45.11
+      "present": 192,
+      "missing": 123,
+      "completeness_pct": 60.95
     },
     "email": {
-      "present": 76,
-      "missing": 272,
-      "completeness_pct": 21.84
+      "present": 117,
+      "missing": 198,
+      "completeness_pct": 37.14
     },
     "website": {
-      "present": 151,
-      "missing": 197,
-      "completeness_pct": 43.39
+      "present": 209,
+      "missing": 106,
+      "completeness_pct": 66.35
     },
     "opening_hours": {
-      "present": 58,
-      "missing": 290,
-      "completeness_pct": 16.67
+      "present": 65,
+      "missing": 250,
+      "completeness_pct": 20.63
     },
     "price": {
-      "present": 159,
-      "missing": 189,
-      "completeness_pct": 45.69
+      "present": 74,
+      "missing": 241,
+      "completeness_pct": 23.49
     },
     "coordinates": {
-      "present": 256,
-      "missing": 92,
-      "completeness_pct": 73.56
+      "present": 244,
+      "missing": 71,
+      "completeness_pct": 77.46
     }
   },
   "coordinate_validity": {
-    "with_valid_coordinates": 256,
-    "without_coordinates": 92
+    "with_valid_coordinates": 244,
+    "without_coordinates": 71
   },
   "url_validity": {
-    "with_website": 151,
-    "without_website": 197
+    "with_website": 209,
+    "without_website": 106
   },
   "rejection_reasons": {},
   "generated_outputs": {

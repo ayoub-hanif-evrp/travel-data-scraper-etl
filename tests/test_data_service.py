@@ -33,11 +33,11 @@ def _records() -> list[dict]:
         },
         {
             "id": "2222222222222222",
-            "destination": "Fes",
-            "country": "Morocco",
+            "destination": "Paris",
+            "country": "France",
             "category": "see",
             "subcategory": None,
-            "name": "Medina Gate",
+            "name": "Louvre Gate",
             "address": None,
             "latitude": None,
             "longitude": None,
@@ -47,8 +47,8 @@ def _records() -> list[dict]:
             "opening_hours": None,
             "price": None,
             "description": "Historic gate",
-            "source_url": "https://en.wikivoyage.org/wiki/Fes",
-            "source_listing_id": "Medina_Gate",
+            "source_url": "https://en.wikivoyage.org/wiki/Paris",
+            "source_listing_id": "Louvre_Gate",
             "scraped_at": "2026-01-01T00:00:00+00:00",
         },
     ]
@@ -61,6 +61,7 @@ def test_filter_and_metrics(tmp_path: Path) -> None:
     service.load()
     assert service.source == "sqlite"
     assert service.overview_metrics()["total_listings"] == 2
+    assert service.overview_metrics()["countries"] == 2
     assert service.overview_metrics()["with_coordinates"] == 1
     assert service.overview_metrics()["with_website"] == 1
 
@@ -68,12 +69,16 @@ def test_filter_and_metrics(tmp_path: Path) -> None:
     assert len(filtered) == 1
     assert filtered.iloc[0]["name"] == "Cafe Atlas"
 
+    by_country = service.filter_listings(countries=["France"])
+    assert len(by_country) == 1
+    assert by_country.iloc[0]["destination"] == "Paris"
+
     cats = service.filter_listings(categories=["see"])
     assert len(cats) == 1
 
     csv_text = service.filtered_csv(filtered)
     assert "Cafe Atlas" in csv_text
-    assert "Medina Gate" not in csv_text
+    assert "Louvre Gate" not in csv_text
 
     listing = service.get_listing("1111111111111111")
     assert listing is not None

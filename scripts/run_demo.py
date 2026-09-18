@@ -12,7 +12,7 @@ from pathlib import Path
 from scrapy import signals
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
-from travel_scraper import DEFAULT_DESTINATIONS, PROJECT_ROOT
+from travel_scraper import DEFAULT_DESTINATION_NAMES, PROJECT_ROOT
 from travel_scraper.etl import run_etl
 from travel_scraper.spiders.wikivoyage import WikivoyageSpider
 
@@ -30,8 +30,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--destinations",
         nargs="+",
-        default=list(DEFAULT_DESTINATIONS),
-        help="Destination page titles (default: five Moroccan cities)",
+        default=list(DEFAULT_DESTINATION_NAMES),
+        help="Destination page titles (default: small multi-country sample)",
     )
     parser.add_argument(
         "--limit",

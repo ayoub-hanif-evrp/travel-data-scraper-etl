@@ -9,9 +9,9 @@ from urllib.parse import quote
 import scrapy
 
 from travel_scraper import (
-    DEFAULT_DESTINATIONS,
-    DESTINATION_COUNTRY,
+    DEFAULT_DESTINATION_NAMES,
     WIKIVOYAGE_BASE,
+    resolve_country,
 )
 from travel_scraper.items import TravelListingItem
 from travel_scraper.parsing import parse_vcard
@@ -41,7 +41,7 @@ class WikivoyageSpider(scrapy.Spider):
                 d.strip() for d in destinations.replace(";", ",").split(",") if d.strip()
             ]
         else:
-            self.destinations = list(DEFAULT_DESTINATIONS)
+            self.destinations = list(DEFAULT_DESTINATION_NAMES)
         self.limit = int(limit) if limit else None
         self.pages_ok = 0
         self.pages_failed = 0
@@ -49,12 +49,18 @@ class WikivoyageSpider(scrapy.Spider):
     async def start(self):
         for name in self.destinations:
             url = WIKIVOYAGE_BASE + quote(name.replace(" ", "_"))
-            logger.info("Requesting destination: %s (%s)", name, url)
+            country = resolve_country(name)
+            logger.info(
+                "Requesting destination: %s (%s)%s",
+                name,
+                url,
+                f" [{country}]" if country else " [country unknown]",
+            )
             yield scrapy.Request(
                 url,
                 callback=self.parse,
                 errback=self.errback,
-                meta={"destination": name, "dont_redirect": False},
+                meta={"destination": name, "country": country, "dont_redirect": False},
                 dont_filter=True,
             )
 
@@ -65,7 +71,9 @@ class WikivoyageSpider(scrapy.Spider):
     def parse(self, response: scrapy.http.Response):
         destination = response.meta.get("destination") or response.url.rsplit("/", 1)[-1]
         destination = destination.replace("_", " ")
-        country = DESTINATION_COUNTRY.get(destination)
+        country = response.meta.get("country")
+        if country is None:
+            country = resolve_country(destination)
         scraped_at = datetime.now(UTC).replace(microsecond=0).isoformat()
         canonical = response.css('link[rel="canonical"]::attr(href)').get() or response.url
 
@@ -75,7 +83,11 @@ class WikivoyageSpider(scrapy.Spider):
             return
 
         self.pages_ok += 1
-        logger.info("Processing destination: %s", destination)
+        logger.info(
+            "Processing destination: %s%s",
+            destination,
+            f" ({country})" if country else "",
+        )
 
         count = 0
         for vcard in response.css("bdi.vcard"):

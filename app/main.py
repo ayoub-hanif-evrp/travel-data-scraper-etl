@@ -12,6 +12,7 @@ from app.pages.listings import register_listings
 from app.pages.overview import register_overview
 from app.pages.pipeline import register_pipeline
 from app.pages.quality import register_quality
+from app.theme import apply_theme
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,13 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_app() -> DataService:
-    ui.add_css(
-        """
-        body { background: #f8fafc; font-family: "Segoe UI", "Helvetica Neue", sans-serif; }
-        a { color: #1d4ed8; }
-        """,
-        shared=True,
-    )
+    apply_theme()
     service = DataService()
     service.load()
     register_overview(service)

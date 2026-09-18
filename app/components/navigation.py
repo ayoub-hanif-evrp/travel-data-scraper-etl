@@ -15,15 +15,14 @@ NAV_ITEMS = (
 
 
 def render_header(active: str) -> None:
-    with ui.header().classes("items-center px-6 py-3 bg-slate-800 text-white"):
-        with ui.column().classes("gap-0 mr-8"):
-            ui.label(APP_NAME).classes("text-lg font-semibold tracking-tight")
-            ui.label(APP_SUBTITLE).classes("text-xs text-slate-300")
-        with ui.row().classes("items-center gap-1 flex-wrap"):
-            for path, label in NAV_ITEMS:
-                classes = "px-3 py-1 rounded text-sm"
-                if path == active:
-                    classes += " bg-slate-600 font-medium"
-                else:
-                    classes += " hover:bg-slate-700"
-                ui.link(label, path).classes(classes + " text-white no-underline")
+    with ui.header().classes("tde-header items-center justify-between px-6 py-4 gap-4"):
+        with ui.row().classes("items-center gap-8 flex-wrap"):
+            with ui.column().classes("gap-0"):
+                ui.label(APP_NAME).classes("tde-brand text-xl text-white")
+                ui.label(APP_SUBTITLE).classes("text-xs text-teal-100/80 max-w-md")
+            with ui.row().classes("items-center gap-1 flex-wrap"):
+                for path, label in NAV_ITEMS:
+                    classes = "tde-nav-link"
+                    if path == active:
+                        classes += " active"
+                    ui.link(label, path).classes(classes)

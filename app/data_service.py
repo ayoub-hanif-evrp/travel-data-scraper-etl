@@ -71,6 +71,11 @@ class DataService:
             return []
         return sorted(self.df["destination"].dropna().astype(str).unique().tolist())
 
+    def countries(self) -> list[str]:
+        if self.is_empty or "country" not in self.df.columns:
+            return []
+        return sorted(self.df["country"].dropna().astype(str).unique().tolist())
+
     def categories(self) -> list[str]:
         if self.is_empty or "category" not in self.df.columns:
             return []
@@ -81,6 +86,7 @@ class DataService:
         *,
         search: str | None = None,
         destinations: list[str] | None = None,
+        countries: list[str] | None = None,
         categories: list[str] | None = None,
     ) -> pd.DataFrame:
         frame = self.df
@@ -90,6 +96,8 @@ class DataService:
         mask = pd.Series(True, index=frame.index)
         if destinations:
             mask &= frame["destination"].isin(destinations)
+        if countries and "country" in frame.columns:
+            mask &= frame["country"].isin(countries)
         if categories:
             mask &= frame["category"].isin(categories)
         if search:
@@ -101,9 +109,11 @@ class DataService:
                     .astype(str)
                     .str.lower()
                 )
-                for col in ("address", "description", "destination", "category"):
+                for col in ("address", "description", "destination", "country", "category"):
                     if col in frame.columns:
-                        searchable = searchable + " " + frame[col].fillna("").astype(str).str.lower()
+                        searchable = (
+                            searchable + " " + frame[col].fillna("").astype(str).str.lower()
+                        )
                 mask &= searchable.str.contains(query, regex=False)
         return frame.loc[mask].copy()
 
@@ -121,10 +131,12 @@ class DataService:
             return {
                 "total_listings": 0,
                 "destinations": 0,
+                "countries": 0,
                 "categories": 0,
                 "with_coordinates": 0,
                 "with_website": 0,
                 "by_destination": {},
+                "by_country": {},
                 "by_category": {},
                 "map_points": [],
             }
@@ -134,6 +146,7 @@ class DataService:
                 "id": str(row.get("id", "")),
                 "name": str(row.get("name", "")),
                 "destination": str(row.get("destination", "")),
+                "country": str(row.get("country") or ""),
                 "category": str(row.get("category", "")),
                 "lat": float(row["latitude"]),
                 "lon": float(row["longitude"]),
@@ -141,15 +154,22 @@ class DataService:
             for _, row in with_coords.iterrows()
             if _valid_coords(row.get("latitude"), row.get("longitude"))
         ]
+        countries_series = (
+            frame["country"].dropna() if "country" in frame.columns else pd.Series(dtype=object)
+        )
         return {
             "total_listings": int(len(frame)),
             "destinations": int(frame["destination"].nunique()),
+            "countries": int(countries_series.nunique()) if not countries_series.empty else 0,
             "categories": int(frame["category"].nunique()),
             "with_coordinates": len(map_points),
             "with_website": int(frame["website"].notna().sum())
             if "website" in frame.columns
             else 0,
             "by_destination": frame["destination"].value_counts().to_dict(),
+            "by_country": countries_series.value_counts().to_dict()
+            if not countries_series.empty
+            else {},
             "by_category": frame["category"].value_counts().to_dict(),
             "map_points": map_points,
         }
@@ -176,6 +196,7 @@ class DataService:
                 "final_records": report.get("final_records", len(self.df)),
                 "field_completeness": completeness,
                 "records_by_destination": report.get("records_by_destination", {}),
+                "records_by_country": report.get("records_by_country", {}),
                 "records_by_category": report.get("records_by_category", {}),
                 "rejection_reasons": report.get("rejection_reasons", {}),
                 "run_timestamp": report.get("run_timestamp"),
@@ -216,6 +237,7 @@ class DataService:
             "final_records": metrics["total_listings"],
             "field_completeness": completeness,
             "records_by_destination": metrics["by_destination"],
+            "records_by_country": metrics["by_country"],
             "records_by_category": metrics["by_category"],
             "rejection_reasons": {},
             "run_timestamp": None,

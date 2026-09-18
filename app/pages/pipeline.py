@@ -6,6 +6,7 @@ from nicegui import ui
 from travel_scraper import DEFAULT_DESTINATIONS
 
 from app.components.navigation import render_header
+from app.theme import PAGE_SHELL, SECTION_CARD, page_heading
 
 STAGES = (
     ("Wikivoyage", "Configured English Wikivoyage destination pages only."),
@@ -24,32 +25,33 @@ def register_pipeline() -> None:
     def pipeline_page() -> None:
         render_header("/pipeline")
 
-        with ui.column().classes("w-full max-w-6xl mx-auto p-6 gap-6"):
-            ui.label("Pipeline").classes("text-2xl font-semibold text-slate-800")
-            ui.label(
-                "Architecture implemented by this demonstration project."
-            ).classes("text-sm text-slate-500 -mt-4")
+        with ui.column().classes(PAGE_SHELL):
+            page_heading(
+                "Pipeline",
+                "Architecture implemented by this demonstration project.",
+            )
 
-            with ui.card().classes("w-full p-5 border border-slate-200 shadow-sm"):
+            with ui.element("div").classes(SECTION_CARD):
                 for index, (title, blurb) in enumerate(STAGES):
-                    with ui.row().classes("items-start gap-3"):
-                        ui.label(f"{index + 1}").classes(
-                            "w-7 h-7 rounded-full bg-slate-800 text-white "
-                            "text-sm flex items-center justify-center shrink-0"
-                        )
+                    with ui.row().classes("items-start gap-3 py-2"):
+                        with ui.element("div").classes("tde-step-num"):
+                            ui.label(str(index + 1)).classes("text-white text-sm")
                         with ui.column().classes("gap-0"):
-                            ui.label(title).classes("font-medium text-slate-800")
+                            ui.label(title).classes("font-semibold text-slate-900")
                             ui.label(blurb).classes("text-sm text-slate-600")
                     if index < len(STAGES) - 1:
-                        ui.label("↓").classes("text-slate-400 ml-2 my-1")
+                        ui.label("↓").classes("text-teal-600/50 ml-3 my-0.5")
 
-            with ui.card().classes("w-full p-5 border border-slate-200 shadow-sm bg-slate-50"):
+            with ui.element("div").classes(SECTION_CARD + " tde-etl-banner"):
                 ui.label("Crawl configuration (demo defaults)").classes(
-                    "font-medium text-slate-800 mb-2"
+                    "tde-section-title"
+                )
+                dest_lines = ", ".join(
+                    f"{d.name} ({d.country})" for d in DEFAULT_DESTINATIONS
                 )
                 ui.markdown(
                     f"""
-- **Target destinations:** {", ".join(DEFAULT_DESTINATIONS)}
+- **Target destinations:** {dest_lines}
 - **Crawl scope:** only the listed destination article pages (no link following)
 - **Output formats:** raw JSONL → processed CSV / JSONL / SQLite + quality reports
 - **Responsible settings:** `ROBOTSTXT_OBEY=True`, low concurrency, download delay,

@@ -1,49 +1,59 @@
 # Data Quality Report
 
-**Run timestamp:** 2026-09-18T13:06:06+00:00
+**Run timestamp:** 2026-09-18T13:31:57+00:00
 
 ## Crawl
 
-- Configured destinations: Marrakech, Fes, Essaouira, Chefchaouen, Rabat
-- Pages requested: 5
-- Pages successfully processed: 5
+- Configured destinations: Marrakech, Paris, Barcelona, Rome, Istanbul, Bangkok
+- Pages requested: 6
+- Pages successfully processed: 6
 - Failed pages: 0
 
 ## Pipeline counts
 
-- Raw records: 349
-- Valid records: 349
+- Raw records: 316
+- Valid records: 316
 - Invalid records: 0
 - Duplicates detected: 1
 - Duplicates removed: 1
-- Final records: 348
+- Final records: 315
 
 ## Records by destination
 
 - Marrakech: 133
-- Fes: 66
-- Rabat: 57
-- Chefchaouen: 48
-- Essaouira: 44
+- Bangkok: 77
+- Paris: 60
+- Barcelona: 28
+- Rome: 11
+- Istanbul: 6
+
+## Records by country
+
+- Morocco: 133
+- Thailand: 77
+- France: 60
+- Spain: 28
+- Italy: 11
+- Turkey: 6
 
 ## Records by category
 
-- sleep: 126
-- see: 72
-- eat: 71
-- do: 44
-- drink: 27
+- see: 146
+- do: 64
+- sleep: 52
+- eat: 34
+- drink: 11
 - buy: 8
 
 ## Field completeness
 
-- address: 206 present (59.2%), 142 missing
-- phone: 157 present (45.11%), 191 missing
-- email: 76 present (21.84%), 272 missing
-- website: 151 present (43.39%), 197 missing
-- opening_hours: 58 present (16.67%), 290 missing
-- price: 159 present (45.69%), 189 missing
-- coordinates: 256 present (73.56%), 92 missing
+- address: 201 present (63.81%), 114 missing
+- phone: 192 present (60.95%), 123 missing
+- email: 117 present (37.14%), 198 missing
+- website: 209 present (66.35%), 106 missing
+- opening_hours: 65 present (20.63%), 250 missing
+- price: 74 present (23.49%), 241 missing
+- coordinates: 244 present (77.46%), 71 missing
 
 ## Rejection reasons
 
